@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok_flutter/domain/entities/video_post.dart';
+import 'package:tiktok_flutter/presentation/widgets/shared/video_buttons.dart';
+import 'package:tiktok_flutter/presentation/widgets/video/fullscreen_player.dart';
+import 'package:tiktok_flutter/shared/data/local_video_posts.dart';
 
 class VideoScrollableView extends StatelessWidget {
 
@@ -12,13 +15,31 @@ class VideoScrollableView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
+    return PageView.builder(
       scrollDirection: Axis.vertical,
-      children: [
-        Container( color: Colors.red ),
-        Container( color: Colors.blue ),
-        Container( color: Colors.yellow ),
-      ],
+      physics: BouncingScrollPhysics(),
+      itemCount: videos.length,
+      itemBuilder: (context, index) {
+        final VideoPost videoPosts= videos[index];
+        return Stack(
+          children: [
+
+            SizedBox.expand(
+              child: FullscreenPlayer(
+                caption: videoPosts.caption,
+                videoUrl: videoPosts.videoUrl,
+              ),
+            ),
+
+
+            Positioned(
+              bottom: 40,
+              right: 20,
+              child: VideoButtons(video: videoPosts)
+            )
+          ],
+        );
+      },
     );
   }
 }
